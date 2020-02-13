@@ -1,7 +1,9 @@
 import * as SQLite from 'expo-sqlite'
+import { addPlace } from '../store/places-actions'
 
 const db = SQLite.openDatabase('places.db')
 
+// Initiliazing the database
 export const initDb = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -10,6 +12,26 @@ export const initDb = () => {
         [],
         () => {
           resolve()
+        },
+        (_, err) => {
+          reject()
+        }
+      )
+    })
+  })
+  return promise
+}
+
+// Inserting data to database
+// ?, ?, ? used for secure replacing of our values, we placed them into array
+export const insertPlaceToDatabase = (title, imageUri, address, lat, lng) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)',
+        [title, imageUri, address, lat, lng],
+        (_, result) => {
+          resolve(result)
         },
         (_, err) => {
           reject()
