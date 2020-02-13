@@ -1,16 +1,25 @@
 import React, { useState } from 'react'
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useDispatch } from 'react-redux'
+
 import Colors from '../constants/Colors'
+import * as placesActions from '../store/places-actions'
 
 const NewPlaceScreen = props => {
+  // access to redux dispatch
+  const dispatch = useDispatch()
+
   const [titleValue, setTitleValue] = useState('')
 
   const titleChangeHandler = text => {
     setTitleValue(text)
   }
 
-  const savePlaceHandler = () => {}
+  const savePlaceHandler = () => {
+    dispatch(placesActions.addPlace(titleValue))
+    props.navigation.goBack()
+  }
 
   return (
     <ScrollView>

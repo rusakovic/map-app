@@ -9,6 +9,12 @@ const PlacesDetailScreen = props => {
   )
 }
 
+export const navigationScreenOptions = navData => {
+  return {
+    headerTitle: navData.route.params.placeTitle
+  }
+}
+
 const styles = StyleSheet.create({})
 
 export default PlacesDetailScreen

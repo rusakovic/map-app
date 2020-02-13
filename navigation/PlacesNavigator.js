@@ -6,7 +6,9 @@ import { createStackNavigator } from '@react-navigation/stack'
 import PlacesListScreen, {
   navigationScreenOptions as placesListScreenNavOptions
 } from '../screens/PlacesListScreen'
-import PlaceDetailScreen from '../screens/PlaceDetailScreen'
+import PlaceDetailScreen, {
+  navigationScreenOptions as placeDetailScreenNavOptions
+} from '../screens/PlaceDetailScreen'
 import MapScreen from '../screens/MapScreen'
 import NewPlaceScreen, {
   navigationScreenOptions as newPlacesScreenNavOptions
@@ -33,6 +35,7 @@ export const PlacesNavigator = () => {
       <PlacesStackNavigator.Screen
         name='PlaceDetail'
         component={PlaceDetailScreen}
+        options={placeDetailScreenNavOptions}
       />
       <PlacesStackNavigator.Screen
         name='NewPlace'
