@@ -7,9 +7,11 @@ import {
   Alert,
   StyleSheet
 } from 'react-native'
-import Colors from '../constants/Colors'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
+
+import MapPreview from './MapPreview'
+import Colors from '../constants/Colors'
 
 const LocationPicker = props => {
   const [isFetching, setisFetching] = useState(false)
@@ -38,8 +40,8 @@ const LocationPicker = props => {
       const location = await Location.getCurrentPositionAsync({ timeout: 5000 })
       console.log(location)
       setpickedLocation({
-        lat: locatition.coords.latitude,
-        lng: locatition.coords.longitude
+        lat: location.coords.latitude,
+        lng: location.coords.longitude
       })
     } catch (error) {
       Alert.alert(
@@ -51,20 +53,35 @@ const LocationPicker = props => {
     setisFetching(false)
   }
 
+  const pickOnMapHandler = () => {
+    props.navigation.navigate('Map')
+  }
+
   return (
     <View style={styles.locationPicker}>
-      <View style={styles.mapPreview}>
+      <MapPreview
+        style={styles.mapPreview}
+        location={pickedLocation}
+        onPress={pickOnMapHandler}
+      >
         {isFetching ? (
           <ActivityIndicator size='large' color={Colors.primary} />
         ) : (
           <Text>No lacation chosen yet</Text>
         )}
+      </MapPreview>
+      <View style={styles.actions}>
+        <Button
+          title='Get user location'
+          color={Colors.primary}
+          onPress={getLocationHandler}
+        />
+        <Button
+          title='Pick on map'
+          color={Colors.primary}
+          onPress={pickOnMapHandler}
+        />
       </View>
-      <Button
-        title='Get user location'
-        color={Colors.primary}
-        onPress={getLocationHandler}
-      />
     </View>
   )
 }
@@ -78,9 +95,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     borderColor: '#ccc',
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    borderWidth: 1
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%'
   }
 })
 
