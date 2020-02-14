@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
+import React, { useState, useCallback, useEffect } from 'react'
+import { TouchableOpacity, Text, StyleSheet, Platform } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
+
+import Colors from '../constants/Colors'
 
 const MapScreen = props => {
   const [selectedLocation, setSelectedLocation] = useState()
@@ -18,6 +20,27 @@ const MapScreen = props => {
       lng: event.nativeEvent.coordinate.longitude
     })
   }
+
+  // using useCallback for avoiding infinitive loop
+  const savePickedLocationHandler = useCallback(() => {
+    if (!selectedLocation) {
+      return
+    }
+    props.navigation.navigate('NewPlace', { pickedLocation: selectedLocation })
+  }, [selectedLocation])
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={savePickedLocationHandler}
+        >
+          <Text style={styles.headerButtonText}>Save</Text>
+        </TouchableOpacity>
+      )
+    })
+  }, [savePickedLocationHandler])
 
   let markerCoordinates
 
@@ -44,6 +67,13 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   map: {
     flex: 1
+  },
+  headerButton: {
+    marginHorizontal: 20
+  },
+  headerButtonText: {
+    fontSize: 16,
+    color: Platform.OS === 'android' ? 'white' : Colors.primary
   }
 })
 
