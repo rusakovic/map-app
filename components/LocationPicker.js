@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Button,
@@ -16,6 +16,16 @@ import Colors from '../constants/Colors'
 const LocationPicker = props => {
   const [isFetching, setisFetching] = useState(false)
   const [pickedLocation, setpickedLocation] = useState()
+
+  // optional chaining approach https://reactnavigation.org/docs/en/upgrading-from-4.x.html#no-more-getparam
+  const mapPickedLocation = props.route.params?.pickedLocation ?? null
+
+  // we check if we already picked marker on map or not
+  useEffect(() => {
+    if (mapPickedLocation) {
+      setpickedLocation(mapPickedLocation)
+    }
+  }, [mapPickedLocation])
 
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION)

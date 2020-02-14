@@ -26,7 +26,10 @@ const MapScreen = props => {
     if (!selectedLocation) {
       return
     }
-    props.navigation.navigate('NewPlace', { pickedLocation: selectedLocation })
+    props.navigation.navigate({
+      name: 'NewPlace',
+      params: { pickedLocation: selectedLocation }
+    })
   }, [selectedLocation])
 
   useEffect(() => {

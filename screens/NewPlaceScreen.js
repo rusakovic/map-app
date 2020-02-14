@@ -9,6 +9,7 @@ import ImgPicker from '../components/ImagePicker'
 import LocationPicker from '../components/LocationPicker'
 
 const NewPlaceScreen = props => {
+  console.log('newplacescreenProps', props)
   // access to redux dispatch
   const dispatch = useDispatch()
 
@@ -38,7 +39,7 @@ const NewPlaceScreen = props => {
           value={titleValue}
         />
         <ImgPicker onImageTaken={imageTakenHandler} />
-        <LocationPicker navigation={props.navigation} />
+        <LocationPicker navigation={props.navigation} route={props.route} />
         <Button
           title='Save Place'
           color={Colors.primary}
