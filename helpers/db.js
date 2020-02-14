@@ -1,5 +1,4 @@
 import * as SQLite from 'expo-sqlite'
-import { addPlace } from '../store/places-actions'
 
 const db = SQLite.openDatabase('places.db')
 
@@ -30,6 +29,25 @@ export const insertPlaceToDatabase = (title, imageUri, address, lat, lng) => {
       tx.executeSql(
         'INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)',
         [title, imageUri, address, lat, lng],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject()
+        }
+      )
+    })
+  })
+  return promise
+}
+
+// fetching data from SQLite database
+export const fetchPlaces = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM places',
+        [],
         (_, result) => {
           resolve(result)
         },
