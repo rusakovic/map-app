@@ -20,12 +20,15 @@ const LocationPicker = props => {
   // optional chaining approach https://reactnavigation.org/docs/en/upgrading-from-4.x.html#no-more-getparam
   const mapPickedLocation = props.route.params?.pickedLocation ?? null
 
+  const { onLocationPicked } = props
+
   // we check if we already picked marker on map or not
   useEffect(() => {
     if (mapPickedLocation) {
       setpickedLocation(mapPickedLocation)
+      onLocationPicked(mapPickedLocation)
     }
-  }, [mapPickedLocation])
+  }, [mapPickedLocation, onLocationPicked])
 
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION)
@@ -48,8 +51,11 @@ const LocationPicker = props => {
     try {
       setisFetching(true)
       const location = await Location.getCurrentPositionAsync({ timeout: 5000 })
-      console.log(location)
       setpickedLocation({
+        lat: location.coords.latitude,
+        lng: location.coords.longitude
+      })
+      props.onLocationPicked({
         lat: location.coords.latitude,
         lng: location.coords.longitude
       })

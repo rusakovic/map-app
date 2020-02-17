@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: 25,
-    width: 250,
+    width: 200,
     justifyContent: 'center',
     alignItems: 'flex-start'
   },

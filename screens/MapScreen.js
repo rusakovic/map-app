@@ -5,16 +5,24 @@ import MapView, { Marker } from 'react-native-maps'
 import Colors from '../constants/Colors'
 
 const MapScreen = props => {
-  const [selectedLocation, setSelectedLocation] = useState()
+  console.log(props)
+  const initialLocation = props.route.params?.initialLocation ?? null
+  const readOnly = props.route.params?.readOnly ?? null
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation)
 
   const mapRegion = {
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: initialLocation ? initialLocation.lat : 37.78,
+    longitude: initialLocation ? initialLocation.lng : -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   }
 
   const selectLocationHandler = event => {
+    // don't pick any location if we just want to see the map with marker
+    if (readOnly) {
+      return
+    }
+
     setSelectedLocation({
       lat: event.nativeEvent.coordinate.latitude,
       lng: event.nativeEvent.coordinate.longitude
@@ -33,16 +41,19 @@ const MapScreen = props => {
   }, [selectedLocation])
 
   useEffect(() => {
-    props.navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={savePickedLocationHandler}
-        >
-          <Text style={styles.headerButtonText}>Save</Text>
-        </TouchableOpacity>
-      )
-    })
+    // not show save button  in readOnly mode
+    if (!readOnly) {
+      props.navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            style={styles.headerButton}
+            onPress={savePickedLocationHandler}
+          >
+            <Text style={styles.headerButtonText}>Save</Text>
+          </TouchableOpacity>
+        )
+      })
+    }
   }, [savePickedLocationHandler])
 
   let markerCoordinates
